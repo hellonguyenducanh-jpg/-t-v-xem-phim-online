@@ -10,10 +10,9 @@
             width: 100%; height: 100%; margin: 0; padding: 0;
             background-color: #1a1a2e; color: #ffffff;
             font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden; /* Chống cuộn toàn bộ trang */
+            overflow: hidden;
         }
         
-        /* Bố cục ứng dụng full màn hình */
         .app-container {
             display: flex; flex-direction: column;
             width: 100%; height: 100%;
@@ -27,15 +26,14 @@
             background: linear-gradient(45deg, #ff6b6b, #e43f5a, #ff9f43); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .brand-icon { font-size: 22px; color: #e43f5a; }
-        h1 { color: #ffffff; font-size: 13px; margin: 4px 0 15px 0; uppercase: true; opacity: 0.7; letter-spacing: 1px; }
+        h1 { color: #ffffff; font-size: 13px; margin: 4px 0 15px 0; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
 
-        /* Khu vực danh sách phim tự cuộn mượt mà bên trong */
         .grid-wrapper {
             flex-grow: 1; overflow-y: auto; overflow-x: hidden;
             -webkit-overflow-scrolling: touch; padding-bottom: 20px;
         }
         .movie-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); /* Chia đều 2 cột cố định trên Mobile */
+            display: grid; grid-template-columns: repeat(2, 1fr);
             gap: 12px; max-width: 800px; margin: 0 auto; width: 100%;
         }
         
@@ -64,7 +62,7 @@
 
         .btn-booking { background-color: #e43f5a; color: white; border: none; padding: 9px 0; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 88%; margin: 0 auto; display: block; -webkit-tap-highlight-color: transparent; }
 
-        /* Lightbox xem Trailer chuẩn Full Màn Hình */
+        /* Lightbox xem Trailer */
         .lightbox { display: none; position: fixed; z-index: 1000; top:0; left:0; width:100%; height:100%; background-color: rgba(10, 10, 26, 0.98); justify-content: center; align-items: center; padding: 15px; }
         .lightbox-content { background-color: #162447; max-width: 450px; width: 100%; border-radius: 12px; padding: 20px; text-align: center; position: relative; }
         .btn-close-lightbox { position: absolute; top: -12px; right: -12px; background: #e43f5a; color: white; border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 16px; font-weight: bold; cursor: pointer; z-index: 1010; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
@@ -74,7 +72,7 @@
         .video-wrapper { display: none; margin-top: 10px; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background-color: #000; width: 100%; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-        /* Booking Overlay Full Màn Hình */
+        /* Booking Overlay Fullscreen */
         .booking-overlay { display: none; position: fixed; z-index: 1001; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a1a2e; padding: 0; }
         .booking-scroll-area { width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; padding: 15px; -webkit-overflow-scrolling: touch; }
         .booking-container { background-color: #162447; border-radius: 12px; padding: 20px 15px; max-width: 450px; width: 100%; margin: 0 auto; position: relative; }
@@ -91,7 +89,6 @@
         .screen { background-color: #e2e8f0; height: 5px; border-radius: 4px; margin: 15px 0 20px 0; box-shadow: 0 0 8px #fff; }
         .screen-text { text-align: center; font-size: 10px; color: #94a3b8; margin-top: -15px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
         
-        /* Khung chọn ghế co giãn 100% không lo tràn tràn */
         .seat-section { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 20px; width: 100%; }
         .seat-checkbox { display: none; }
         .seat-label { display: block; width: 100%; height: 36px; line-height: 36px; background-color: #4b5563; border-radius: 6px; text-align: center; font-weight: bold; font-size: 12px; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -217,6 +214,16 @@
         grid.innerHTML = html || "<p style='text-align:center; color:#94a3b8;'>Hiện chưa có lịch phim chiếu phù hợp.</p>";
     });
 
+    // Hàm tạo mã vé random ngẫu nhiên chống trùng lặp
+    function taoMaVeNgauNhien() {
+        const kyTu = "ABCDEFGHJKLMNOPQRSTUVWXYZ23456789"; // Loại bỏ chữ O và số 0, 1 để tránh nhầm lẫn khi quét
+        let maRandom = "";
+        for (let i = 0; i < 7; i++) {
+            maRandom += kyTu.charAt(Math.floor(Math.random() * kyTu.length));
+        }
+        return "ST-" + maRandom;
+    }
+
     function openDetails(t, img, yt) {
         document.getElementById('lightboxTitle').innerText = t; 
         document.getElementById('lightboxImg').src = img;
@@ -305,7 +312,8 @@
             const data = snapshot.val();
             if (data) {
                 Object.keys(data).forEach(idGhe => {
-                    if (data[idGhe] === true) {
+                    // Nếu là true hoặc là Object chứa mã vé thì đều coi là đã có người đặt và khóa ghế
+                    if (data[idGhe] === true || (data[idGhe] && typeof data[idGhe] === 'object')) {
                         const cb = document.getElementById(idGhe);
                         if (cb) { cb.disabled = true; cb.checked = false; }
                     }
@@ -333,11 +341,25 @@
         const pathPhim = btoa(unescape(encodeURIComponent(phimHienTai))).replace(/=/g, "");
         const duongDanData = `dat_ve/${pathPhim}/${ngay}/${gio.replace(':', '_')}`;
         
-        let updateData = {}; danhSachGhe.forEach(idGhe => { updateData[idGhe] = true; });
+        // Sinh mã vé ngẫu nhiên ngẫu hứng cho lượt giao dịch này
+        const maVeCuaKhach = taoMaVeNgauNhien();
+
+        let updateData = {}; 
+        danhSachGhe.forEach(idGhe => { 
+            // Lưu thông tin chi tiết cấu trúc gồm trạng thái khóa ghế và mã vé kiểm tra đi kèm
+            updateData[idGhe] = {
+                status: true,
+                ticketCode: maVeCuaKhach,
+                movieTitle: phimHienTai,
+                showDate: ngay,
+                showTime: gio
+            }; 
+        });
 
         database.ref(duongDanData).update(updateData, (error) => {
             if (!error) {
-                alert(`🎉 ĐẶT VÉ THÀNH CÔNG!\n\n🎬 Phim: ${phimHienTai}\n📅 Ngày: ${ngay}\n⏰ Suất: ${gio}\n💺 Ghế: ${danhSachGhe.join(', ')}`);
+                // Hiển thị thông báo kèm mã vé ngẫu nhiên rõ ràng cho người dùng lưu lại
+                alert(`🎉 ĐẶT VÉ THÀNH CÔNG!\n\n🎟️ MÃ VÉ CỦA BẠN: ${maVeCuaKhach}\n(Hãy đưa mã này cho nhân viên STAR CINEMA để in vé thành công)\n\n🎬 Phim: ${phimHienTai}\n📅 Ngày: ${ngay}\n⏰ Suất: ${gio}\n💺 Ghế: ${danhSachGhe.join(', ')}`);
                 closeBooking();
             }
         });
