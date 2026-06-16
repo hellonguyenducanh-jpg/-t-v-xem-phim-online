@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Đặt Vé Xem Phim Realtime</title>
+    <style>
+        /* --- STYLE CHUNG --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2 {
+            color: #e43f5a;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 24px;
+        }
+
+        /* --- DANH SÁCH PHIM (POSTER GRID) --- */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            max-width: 900px;
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        .movie-card {
+            background-color: #162447;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            padding-bottom: 15px;
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .poster-wrapper {
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            background-color: #0f172a;
+            cursor: pointer;
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s;
+        }
+
+        .movie-poster:hover {
+            opacity: 0.8;
+        }
+
+        .movie-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 12px 10px 5px 10px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .age-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .tag-t13 { background-color: #ff9f43; color: #000; }
+        .tag-t16 { background-color: #ff6b6b; color: #fff; }
+        .tag-k { background-color: #10ac84; color: #fff; }
+
+        .btn-booking {
+            background-color: #e43f5a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-booking:hover {
+            background-color: #b93246;
+        }
+
+        /* --- CHI TIẾT POSTER & XEM VIDEO (LIGHTBOX/POPUP MODAL) --- */
+        .lightbox {
+            display: none; 
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 10, 26, 0.95);
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .lightbox-content {
+            background-color: #162447;
+            max-width: 450px;
+            width: 100%;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            position: relative;
+        }
+
+        .btn-close-lightbox {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: #e43f5a;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .lightbox-img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .btn-play-trailer {
+            background-color: #00b894;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            margin: 10px 0 20px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(0, 184, 148, 0.4);
+        }
+
+        .video-wrapper {
+            display: none; 
+            margin-top: 15px;
+            position: relative;
+            padding-bottom: 56.25%; 
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* --- GIAO DIỆN ĐẶT VÉ TOÀN MÀN HÌNH (MODAL) --- */
+        .booking-overlay {
+            display: none; 
+            position: fixed;
+            z-index: 1001; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a1a2e;
+            overflow-y: auto;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        .booking-container {
+            background-color: #162447;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            max-width: 480px;
+            width: 100%;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .btn-close-booking {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e43f5a;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #1f4068;
+            border-radius: 6px;
+            background-color: #1f4068;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* KHUNG GIỜ CHIẾU */
+        .time-slots-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .time-slot-radio {
+            display: none; 
+        }
+
+        .time-slot-label {
+            display: block;
+            background-color: #ffffff;
+            color: #1a1a2e;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .time-slot-radio:checked + .time-slot-label {
+            background-color: #e43f5a;
+            color: #ffffff;
+            border-color: #ffffff;
+            box-shadow: 0 0 8px rgba(224, 63, 90, 0.6);
+        }
+
+        /* Ghế ngồi */
+        .screen {
+            background-color: #e2e8f0;
+            height: 6px;
+            border-radius: 4px;
+            margin: 15px 0 25px 0;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .screen-text {
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: -20px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .seat-section {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .seat-checkbox {
+            display: none;
+        }
+
+        .seat-label {
+            display: inline-block;
+            width: 100%;
+            height: 38px;
+            line-height: 38px;
+            background-color: #4b5563;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.2s;
+            user-select: none;
+            font-size: 14px;
+        }
+
+        .seat-checkbox:checked + .seat-label {
+            background-color: #e43f5a;
+            color: #fff;
+        }
+
+        /* Trạng thái ghế đã có người đặt trước */
+        .seat-checkbox:disabled + .seat-label {
+            background-color: #bdc3c7 !important;
+            color: #7f8c8d !important;
+            cursor: not-allowed !important;
+            position: relative;
+        }
+        .seat-checkbox:disabled + .seat-label::after {
+            content: "✕";
+            color: #e43f5a;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+        }
+
+        .btn-submit-booking {
+            width: 100%;
+            background-color: #e43f5a;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-submit-booking:hover {
+            background-color: #b93246;
+        }
+
+        .total-price {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #10b981;
+        }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+
+    <h1>Lịch Chiếu Phim Rạp</h1>
+
+    <div class="movie-grid">
+        <div class="movie-card">
+            <div class="poster-wrapper" onclick="openDetails('Tên cậu là gì', 'https://i.postimg.cc/NjQ4XbdS/IMG-5274.jpg', '_mifHzxFNQ4')">
+                <img src="https://i.postimg.cc/NjQ4XbdS/IMG-5274.jpg" alt="Tên cậu là gì" class="movie-poster">
+            </div>
+            <div class="movie-title">Tên cậu là gì</div>
+            <span class="age-tag tag-t13">T13</span><br>
+            <button class="btn-booking" onclick="openBooking('Tên cậu là gì')">Đặt Vé Ngay</button>
+        </div>
+
+        <div class="movie-card">
+            <div class="poster-wrapper" onclick="openDetails('Ốc mượn hồn', 'https://i.postimg.cc/Lscgt8Hb/IMG-5275.jpg', 'oMIKY1IBUo')">
+                <img src="https://i.postimg.cc/Lscgt8Hb/IMG-5275.jpg" alt="Ốc mượn hồn" class="movie-poster">
+            </div>
+            <div class="movie-title">Ốc mượn hồn</div>
+            <span class="age-tag tag-t16">T16</span><br>
+            <button class="btn-booking" onclick="openBooking('Ốc mượn hồn')">Đặt Vé Ngay</button>
+        </div>
+
+        <div class="movie-card">
+            <div class="poster-wrapper" onclick="openDetails('Tạm biệt gohan', 'https://i.postimg.cc/j5YCW3Xz/IMG-5276.jpg', 'PaGtIdi8ONk')">
+                <img src="https://i.postimg.cc/j5YCW3Xz/IMG-5276.jpg" alt="Tạm biệt gohan" class="movie-poster">
+            </div>
+            <div class="movie-title">Tạm biệt gohan</div>
+            <span class="age-tag tag-k">Phim K</span><br>
+            <button class="btn-booking" onclick="openBooking('Tạm biệt gohan')">Đặt Vé Ngay</button>
+        </div>
+    </div>
+
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <button class="btn-close-lightbox" onclick="closeLightbox()">✕</button>
+            <h2 id="lightboxTitle" style="margin-top:0; font-size: 20px;">Tên Phim</h2>
+            <img id="lightboxImg" class="lightbox-img" src="" alt="Poster">
+            <div>
+                <button class="btn-play-trailer" onclick="playTrailer()">▶ Xem Trailer Video</button>
+            </div>
+            <div class="video-wrapper" id="videoWrapper">
+                <iframe id="youtubePlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="booking-overlay" id="bookingOverlay">
+        <div class="booking-container">
+            <button class="btn-close-booking" onclick="closeBooking()">✕</button>
+            <h2 id="bookingMovieTitle" style="margin-top: 10px; font-size: 20px;">ĐẶT VÉ</h2>
+            
+            <form id="bookingForm" onsubmit="datVe(event)">
+                <div class="form-group">
+                    <label for="date">Chọn Ngày:</label>
+                    <input type="date" id="date" required onchange="capNhatGioChieu()">
+                </div>
+
+                <div class="form-group">
+                    <label>Suất Chiếu:</label>
+                    <div class="time-slots-container" id="timeSlotsArea"></div>
+                </div>
+
+                <label>Chọn Ghế Ngồi:</label>
+                <div class="screen"></div>
+                <div class="screen-text">Màn Hình</div>
+                
+                <div class="seat-section">
+                    <div><input type="checkbox" id="A1" class="seat-checkbox" value="A1" onchange="tinhTien()"><label for="A1" class="seat-label">A1</label></div>
+                    <div><input type="checkbox" id="A2" class="seat-checkbox" value="A2" onchange="tinhTien()"><label for="A2" class="seat-label">A2</label></div>
+                    <div><input type="checkbox" id="A3" class="seat-checkbox" value="A3" onchange="tinhTien()"><label for="A3" class="seat-label">A3</label></div>
+                    <div><input type="checkbox" id="A4" class="seat-checkbox" value="A4" onchange="tIntegration()"><label for="A4" class="seat-label">A4</label></div>
+                    <div><input type="checkbox" id="A5" class="seat-checkbox" value="A5" onchange="tinhTien()"><label for="A5" class="seat-label">A5</label></div>
+                    <div><input type="checkbox" id="B1" class="seat-checkbox" value="B1" onchange="tinhTien()"><label for="B1" class="seat-label">B1</label></div>
+                    <div><input type="checkbox" id="B2" class="seat-checkbox" value="B2" onchange="tinhTien()"><label for="B2" class="seat-label">B2</label></div>
+                    <div><input type="checkbox" id="B3" class="seat-checkbox" value="B3" onchange="tinhTien()"><label for="B3" class="seat-label">B3</label></div>
+                    <div><input type="checkbox" id="B4" class="seat-checkbox" value="B4" onchange="tinhTien()"><label for="B4" class="seat-label">B4</label></div>
+                    <div><input type="checkbox" id="B5" class="seat-checkbox" value="B5" onchange="tinhTien()"><label for="B5" class="seat-label">B5</label></div>
+                </div>
+
+                <div class="total-price" id="totalDisplay">Tổng tiền: 0 đ</div>
+                <br>
+                <button type="submit" class="btn-submit-booking">XÁC NHẬN ĐẶT VÉ</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+    // 1. Khởi tạo cấu hình kết nối trực tiếp đến Database Firebase của bạn
+    const firebaseConfig = {
+        databaseURL: "https://phim-daaa7-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const GIA_VE = 55000; 
+    let phimHienTai = "";
+    let idVideoHienTai = ""; 
+
+    // Đặt mặc định ngày hôm nay
+    document.getElementById('date').valueAsDate = new Date();
+
+    /* --- POSTER & TRAILER LIGHTBOX --- */
+    function openDetails(tenPhim, imgUrl, youtubeId) {
+        document.getElementById('lightboxTitle').innerText = tenPhim;
+        document.getElementById('lightboxImg').src = imgUrl;
+        idVideoHienTai = youtubeId;
+        document.getElementById('videoWrapper').style.display = 'none';
+        document.getElementById('youtubePlayer').src = "";
+        document.getElementById('lightbox').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function playTrailer() {
+        document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${idVideoHienTai}?autoplay=1`;
+        document.getElementById('videoWrapper').style.display = 'block';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+        document.getElementById('youtubePlayer').src = "";
+        if(document.getElementById('bookingOverlay').style.display !== 'block') {
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    /* --- QUAN TRỌNG: TỰ ĐỘNG LỌC VÀ ẨN GIỜ CHIẾU ĐÃ QUA --- */
+    function capNhatGioChieu() {
+        const dateInput = document.getElementById('date').value;
+        const timeSlotsArea = document.getElementById('timeSlotsArea');
+        if (!dateInput) return;
+
+        const dateObj = new Date(dateInput);
+        const dayParsed = dateObj.getDate();
+        
+        // Lấy thời gian hiện tại từ thiết bị
+        const hienTai = new Date();
+        const laNgayHomNay = (dateObj.toDateString() === hienTai.toDateString());
+        
+        let danhSachGioGoc = [];
+        if (dayParsed % 2 === 0) {
+            danhSachGioGoc = ["10:00", "12:10", "14:00", "18:10", "20:20", "22:30"];
+        } else {
+            danhSachGioGoc = ["09:15", "11:30", "13:45", "16:00", "19:30", "21:45"];
+        }
+
+        // Lọc giờ: Nếu là ngày hôm nay, chỉ giữ lại các giờ lớn hơn giờ hiện tại
+        let danhSachGioHienThi = danhSachGioGoc.filter(gio => {
+            if (!laNgayHomNay) return true; // Nếu chọn ngày tương lai thì hiện hết
+            
+            const [gioXem, phutXem] = gio.split(":").map(Number);
+            const gioHienTai = hienTai.getHours();
+            const phutHienTai = hienTai.getMinutes();
+            
+            // Đổi hết ra số phút để so sánh chính xác nhất
+            return (gioXem * 60 + phutXem) > (gioHienTai * 60 + phutHienTai);
+        });
+
+        if (danhSachGioHienThi.length === 0) {
+            timeSlotsArea.innerHTML = "<p style='color:#ff6b6b; font-size:14px; font-weight:600;'>Hôm nay đã hết suất chiếu!</p>";
+            resetFormGhe();
+            return;
+        }
+
+        let htmlSlots = "";
+        danhSachGioHienThi.forEach((gio, index) => {
+            const checkedAttr = index === 0 ? "checked" : ""; 
+            htmlSlots += `
+                <div>
+                    <input type="radio" name="timeSlot" id="slot_${index}" class="time-slot-radio" value="${gio}" ${checkedAttr} onchange="taiTrangThaiGheRealtime()">
+                    <label for="slot_${index}" class="time-slot-label">${gio}</label>
+                </div>
+            `;
+        });
+        timeSlotsArea.innerHTML = htmlSlots;
+        
+        // Gọi tải dữ liệu ghế ngồi của khung giờ hiện tại
+        taiTrangThaiGheRealtime();
+    }
+
+    /* --- QUAN TRỌNG: ĐỌC DỮ LIỆU GHẾ REALTIME TỪ FIREBASE --- */
+    function taiTrangThaiGheRealtime() {
+        resetFormGhe();
+        const ngay = document.getElementById('date').value;
+        const slotSelected = document.querySelector('input[name="timeSlot"]:checked');
+        
+        if (!ngay || !slotSelected || !phimHienTai) return;
+        
+        const gio = slotSelected.value;
+        // Tạo một đường dẫn chuẩn hóa (bỏ dấu tiếng việt/ký tự đặc biệt để an toàn cho database)
+        const pathPhim = btoa(unescape(encodeURIComponent(phimHienTai))).replace(/=/g, "");
+        const duongDanData = `dat_ve/${pathPhim}/${ngay}/${gio.replace(':', '_')}`;
+
+        // Lắng nghe thay đổi liên tục từ Firebase Realtime Database
+        database.ref(duongDanData).on('value', (snapshot) => {
+            resetFormGhe(); // Xóa trạng thái cũ
+            const data = snapshot.val();
+            if (data) {
+                // Duyệt qua danh sách các ghế đã lưu trên database để khóa lại
+                Object.keys(data).forEach(idGhe => {
+                    if (data[idGhe] === true) {
+                        const checkboxGhe = document.getElementById(idGhe);
+                        if (checkboxGhe) {
+                            checkboxGhe.disabled = true;
+                            checkboxGhe.checked = false;
+                        }
+                    }
+                });
+            }
+            tinhTien();
+        });
+    }
+
+    function resetFormGhe() {
+        const checkboxes = document.querySelectorAll('.seat-checkbox');
+        checkboxes.forEach(cb => {
+            cb.disabled = false;
+            cb.checked = false;
+        });
+    }
+
+    /* --- GIAO DIỆN ĐẶT VÉ --- */
+    function openBooking(tenPhim) {
+        phimHienTai = tenPhim;
+        document.getElementById('bookingMovieTitle').innerText = `ĐẶT VÉ: ${tenPhim.toUpperCase()}`;
+        document.getElementById('bookingOverlay').style.display = 'block';
+        document.body.style.overflow = 'hidden'; 
+        
+        capNhatGioChieu();
+    }
+
+    function closeBooking() {
+        // Tắt lắng nghe dữ liệu Firebase khi thoát để tránh lãng phí tài nguyên mạng
+        database.ref().off();
+        document.getElementById('bookingOverlay').style.display = 'none';
+        document.body.style.overflow = 'auto'; 
+    }
+
+    function tinhTien() {
+        const gheDaChon = document.querySelectorAll('.seat-checkbox:checked:not(:disabled)');
+        const soLuongGhe = gheDaChon.length;
+        const tongTien = GIA_VE * soLuongGhe;
+        document.getElementById('totalDisplay').innerText = `Tổng tiền: ${tongTien.toLocaleString('vi-VN')} đ`;
+    }
+
+    /* --- QUAN TRỌNG: GHI DỮ LIỆU GHẾ ĐÃ ĐẶT LÊN FIREBASE --- */
+    function datVe(event) {
+        event.preventDefault();
+        const ngay = document.getElementById('date').value;
+        const slotSelected = document.querySelector('input[name="timeSlot"]:checked');
+        const gio = slotSelected ? slotSelected.value : "";
+        
+        const gheDaChon = document.querySelectorAll('.seat-checkbox:checked:not(:disabled)');
+        let danhSachGhe = [];
+        gheDaChon.forEach(ghe => danhSachGhe.push(ghe.value));
+
+        if (!gio) { alert('Vui lòng chọn suất chiếu!'); return; }
+        if (danhSachGhe.length === 0) { alert('Vui lòng chọn ít nhất một vị trí ghế trống!'); return; }
+
+        const pathPhim = btoa(unescape(encodeURIComponent(phimHienTai))).replace(/=/g, "");
+        const duongDanData = `dat_ve/${pathPhim}/${ngay}/${gio.replace(':', '_')}`;
+        
+        // Chuẩn bị object cập nhật dữ liệu hàng loạt lên Firebase
+        let updateData = {};
+        danhSachGhe.forEach(idGhe => {
+            updateData[idGhe] = true;
+        });
+
+        // Đẩy dữ liệu lưu trữ vĩnh viễn lên link database của bạn
+        database.ref(duongDanData).update(updateData, (error) => {
+            if (error) {
+                alert('Có lỗi xảy ra khi lưu vé, vui lòng thử lại!');
+            } else {
+                alert(`🎉 ĐẶT VÉ THÀNH CÔNG VÀ LƯU DATABASE THỜI GIAN THỰC!\n\n🎬 Phim: ${phimHienTai}\n📅 Ngày: ${ngay}\n⏰ Suất chiếu: ${gio}\n💺 Ghế khóa thành công: ${danhSachGhe.join(', ')}\n💰 ${document.getElementById('totalDisplay').innerText}`);
+                closeBooking();
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
+
