@@ -2,105 +2,146 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hệ Thống Đặt Vé Xem Phim Realtime</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a2e; color: #ffffff; margin: 0; padding: 20px;
-            display: flex; flex-direction: column; align-items: center;
+        * { box-sizing: border-box; }
+        html, body {
+            width: 100%; height: 100%; margin: 0; padding: 0;
+            background-color: #1a1a2e; color: #ffffff;
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Chống cuộn toàn bộ trang */
         }
-        .brand-logo-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 5px; }
+        
+        /* Bố cục ứng dụng full màn hình */
+        .app-container {
+            display: flex; flex-direction: column;
+            width: 100%; height: 100%;
+            padding: 15px 10px 10px 10px;
+        }
+
+        .header-section { flex-shrink: 0; text-align: center; }
+        .brand-logo-container { display: flex; align-items: center; justify-content: center; gap: 8px; }
         .brand-logo {
-            font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px;
+            font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;
             background: linear-gradient(45deg, #ff6b6b, #e43f5a, #ff9f43); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .brand-icon { font-size: 26px; color: #e43f5a; }
-        h1 { color: #ffffff; text-align: center; margin-top: 5px; margin-bottom: 35px; text-transform: uppercase; font-size: 18px; opacity: 0.8; }
+        .brand-icon { font-size: 22px; color: #e43f5a; }
+        h1 { color: #ffffff; font-size: 13px; margin: 4px 0 15px 0; uppercase: true; opacity: 0.7; letter-spacing: 1px; }
 
-        .movie-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; max-width: 950px; width: 100%; margin-bottom: 50px; }
-        .movie-card { background-color: #162447; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; padding-bottom: 15px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s; }
-        .movie-card:hover { transform: translateY(-5px); }
-        .poster-wrapper { width: 100%; height: 270px; overflow: hidden; background-color: #0f172a; cursor: pointer; }
-        .movie-poster { width: 100%; height: 100%; object-fit: cover; }
-        .movie-title { font-size: 15px; font-weight: bold; margin: 12px 8px 5px 8px; height: 44px; display: flex; align-items: center; justify-content: center; line-height: 1.3; }
+        /* Khu vực danh sách phim tự cuộn mượt mà bên trong */
+        .grid-wrapper {
+            flex-grow: 1; overflow-y: auto; overflow-x: hidden;
+            -webkit-overflow-scrolling: touch; padding-bottom: 20px;
+        }
+        .movie-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); /* Chia đều 2 cột cố định trên Mobile */
+            gap: 12px; max-width: 800px; margin: 0 auto; width: 100%;
+        }
         
-        .age-tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-bottom: 12px; align-self: center; }
+        @media (min-width: 600px) {
+            .movie-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 900px) {
+            .movie-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .movie-card {
+            background-color: #162447; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column;
+            justify-content: space-between; padding-bottom: 12px; height: 100%;
+        }
+        .poster-wrapper { width: 100%; aspect-ratio: 2/3; overflow: hidden; background-color: #0f172a; cursor: pointer; }
+        .movie-poster { width: 100%; height: 100%; object-fit: cover; }
+        .movie-title { font-size: 14px; font-weight: bold; margin: 8px 6px 4px 6px; text-align: center; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 36px; }
+        
+        .age-tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-bottom: 10px; align-self: center; text-transform: uppercase; }
         .tag-t13 { background-color: #ff9f43; color: #000; }
         .tag-t16 { background-color: #ff6b6b; color: #fff; }
         .tag-t18 { background-color: #d63031; color: #fff; }
         .tag-k { background-color: #10ac84; color: #fff; }
         .tag-p { background-color: #00cb82; color: #fff; }
 
-        .btn-booking { background-color: #e43f5a; color: white; border: none; padding: 10px 18px; font-size: 13px; font-weight: bold; border-radius: 5px; cursor: pointer; width: 80%; margin: 0 auto; }
+        .btn-booking { background-color: #e43f5a; color: white; border: none; padding: 9px 0; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 88%; margin: 0 auto; display: block; -webkit-tap-highlight-color: transparent; }
 
-        /* Lightbox Trailer */
-        .lightbox { display: none; position: fixed; z-index: 1000; top:0; left:0; width:100%; height:100%; background-color: rgba(10, 10, 26, 0.95); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .lightbox-content { background-color: #162447; max-width: 500px; width: 100%; border-radius: 12px; padding: 20px; text-align: center; position: relative; box-sizing: border-box; }
-        .btn-close-lightbox { position: absolute; top: -15px; right: -15px; background: #e43f5a; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer; z-index: 1010; }
-        .lightbox-img { width: 100%; max-height: 260px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
-        .btn-play-trailer { background-color: #00b894; color: white; border: none; padding: 12px 25px; font-size: 15px; font-weight: bold; border-radius: 30px; cursor: pointer; margin: 10px 0 15px 0; display: inline-flex; align-items: center; gap: 8px; }
+        /* Lightbox xem Trailer chuẩn Full Màn Hình */
+        .lightbox { display: none; position: fixed; z-index: 1000; top:0; left:0; width:100%; height:100%; background-color: rgba(10, 10, 26, 0.98); justify-content: center; align-items: center; padding: 15px; }
+        .lightbox-content { background-color: #162447; max-width: 450px; width: 100%; border-radius: 12px; padding: 20px; text-align: center; position: relative; }
+        .btn-close-lightbox { position: absolute; top: -12px; right: -12px; background: #e43f5a; color: white; border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 16px; font-weight: bold; cursor: pointer; z-index: 1010; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+        .lightbox-img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 8px; margin-bottom: 12px; background-color: #000; }
+        .btn-play-trailer { background-color: #00b894; color: white; border: none; padding: 12px 22px; font-size: 14px; font-weight: bold; border-radius: 30px; cursor: pointer; margin: 5px 0 10px 0; display: inline-flex; align-items: center; gap: 6px; -webkit-tap-highlight-color: transparent; }
         
-        /* Khung chứa video tối ưu tỷ lệ 16:9 chống lỗi */
-        .video-wrapper { display: none; margin-top: 15px; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background-color: #000; width: 100%; }
+        .video-wrapper { display: none; margin-top: 10px; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background-color: #000; width: 100%; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-        /* Booking Overlay */
-        .booking-overlay { display: none; position: fixed; z-index: 1001; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a1a2e; overflow-y: auto; padding: 20px; box-sizing: border-box; }
-        .booking-container { background-color: #162447; border-radius: 12px; padding: 25px; max-width: 500px; width: 100%; margin: 10px auto; position: relative; }
-        .btn-close-booking { position: absolute; top: 15px; right: 15px; background: #e43f5a; color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #cbd5e1; }
-        input[type="date"] { width: 100%; padding: 12px; border: 1px solid #1f4068; border-radius: 6px; background-color: #1f4068; color: #fff; font-size: 16px; box-sizing: border-box; }
-        .time-slots-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
+        /* Booking Overlay Full Màn Hình */
+        .booking-overlay { display: none; position: fixed; z-index: 1001; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a1a2e; padding: 0; }
+        .booking-scroll-area { width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; padding: 15px; -webkit-overflow-scrolling: touch; }
+        .booking-container { background-color: #162447; border-radius: 12px; padding: 20px 15px; max-width: 450px; width: 100%; margin: 0 auto; position: relative; }
+        .btn-close-booking { position: absolute; top: 15px; right: 15px; background: #e43f5a; color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 15px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #cbd5e1; font-size: 14px; }
+        input[type="date"] { width: 100%; padding: 11px; border: 1px solid #1f4068; border-radius: 6px; background-color: #1f4068; color: #fff; font-size: 15px; box-sizing: border-box; font-family: inherit; }
+        .time-slots-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
         .time-slot-radio { display: none; }
-        .time-slot-label { display: block; background-color: #ffffff; color: #1a1a2e; padding: 8px 16px; border-radius: 5px; font-weight: 600; font-size: 14px; cursor: pointer; border: 2px solid transparent; text-align: center; min-width: 60px; }
-        .time-slot-radio:checked + .time-slot-label { background-color: #e43f5a; color: #ffffff; border-color: #ffffff; box-shadow: 0 0 8px rgba(224, 63, 90, 0.6); }
+        .time-slot-label { display: block; background-color: #ffffff; color: #1a1a2e; padding: 7px 12px; border-radius: 5px; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; min-width: 55px; -webkit-tap-highlight-color: transparent; }
+        .time-slot-radio:checked + .time-slot-label { background-color: #e43f5a; color: #ffffff; box-shadow: 0 0 6px rgba(224, 63, 90, 0.5); }
 
-        .screen { background-color: #e2e8f0; height: 6px; border-radius: 4px; margin: 15px 0 25px 0; }
-        .screen-text { text-align: center; font-size: 11px; color: #94a3b8; margin-top: -20px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
-        .seat-section { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 25px; }
+        .screen { background-color: #e2e8f0; height: 5px; border-radius: 4px; margin: 15px 0 20px 0; box-shadow: 0 0 8px #fff; }
+        .screen-text { text-align: center; font-size: 10px; color: #94a3b8; margin-top: -15px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        /* Khung chọn ghế co giãn 100% không lo tràn tràn */
+        .seat-section { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 20px; width: 100%; }
         .seat-checkbox { display: none; }
-        .seat-label { display: inline-block; width: 100%; height: 38px; line-height: 38px; background-color: #4b5563; border-radius: 6px; text-align: center; font-weight: bold; font-size: 13px; cursor: pointer; user-select: none; }
+        .seat-label { display: block; width: 100%; height: 36px; line-height: 36px; background-color: #4b5563; border-radius: 6px; text-align: center; font-weight: bold; font-size: 12px; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
         .seat-checkbox:checked + .seat-label { background-color: #e43f5a; color: #fff; }
-        .seat-checkbox:disabled + .seat-label { background-color: #bdc3c7 !important; color: #7f8c8d !important; cursor: not-allowed !important; position: relative; }
-        .seat-checkbox:disabled + .seat-label::after { content: "✕"; color: #e43f5a; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 16px; }
-        .btn-submit-booking { width: 100%; background-color: #e43f5a; color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
-        .total-price { margin-top: 15px; text-align: center; font-size: 18px; font-weight: bold; color: #10b981; }
+        .seat-checkbox:disabled + .seat-label { background-color: #374151 !important; color: #6b7280 !important; cursor: not-allowed !important; position: relative; }
+        .seat-checkbox:disabled + .seat-label::after { content: "✕"; color: #ef4444; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 14px; }
+        
+        .btn-submit-booking { width: 100%; background-color: #e43f5a; color: white; border: none; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .total-price { text-align: center; font-size: 16px; font-weight: bold; color: #10b981; margin-top: 10px; }
     </style>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
-    <div class="brand-logo-container">
-        <span class="brand-icon">🎬</span>
-        <div class="brand-logo">STAR CINEMA</div>
+<div class="app-container">
+    <div class="header-section">
+        <div class="brand-logo-container">
+            <span class="brand-icon">🎬</span>
+            <div class="brand-logo">STAR CINEMA</div>
+        </div>
+        <h1>Lịch Chiếu Phim Hệ Thống Realtime</h1>
     </div>
-    <h1>Lịch Chiếu Phim Hệ Thống</h1>
 
-    <div class="movie-grid" id="userMovieGrid">Đang cập nhật danh sách phim mới...</div>
+    <div class="grid-wrapper">
+        <div class="movie-grid" id="userMovieGrid">Đang tải danh sách phim...</div>
+    </div>
+</div>
 
-    <div id="lightbox" class="lightbox">
-        <div class="lightbox-content">
-            <button class="btn-close-lightbox" onclick="closeLightbox()">✕</button>
-            <h2 id="lightboxTitle" style="margin-top:0; font-size: 18px;">Tên Phim</h2>
-            <img id="lightboxImg" class="lightbox-img" src="" alt="Poster">
-            <div><button class="btn-play-trailer" id="btnPlay" onclick="playTrailer()">▶ Xem Trailer Trực Tiếp</button></div>
-            <div class="video-wrapper" id="videoWrapper">
-                <iframe id="youtubePlayer" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </div>
+<div id="lightbox" class="lightbox">
+    <div class="lightbox-content">
+        <button class="btn-close-lightbox" onclick="closeLightbox()">✕</button>
+        <h2 id="lightboxTitle" style="margin-top:0; font-size: 16px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Tên Phim</h2>
+        <img id="lightboxImg" class="lightbox-img" src="" alt="Poster">
+        <div><button class="btn-play-trailer" id="btnPlay" onclick="playTrailer()">▶ Xem Trailer Trực Tiếp</button></div>
+        <div class="video-wrapper" id="videoWrapper">
+            <iframe id="youtubePlayer" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
     </div>
+</div>
 
-    <div class="booking-overlay" id="bookingOverlay">
+<div class="booking-overlay" id="bookingOverlay">
+    <div class="booking-scroll-area">
         <div class="booking-container">
             <button class="btn-close-booking" onclick="closeBooking()">✕</button>
-            <h2 id="bookingMovieTitle" style="margin-top: 10px; font-size: 18px;">ĐẶT VÉ</h2>
+            <h2 id="bookingMovieTitle" style="margin-top: 5px; font-size: 16px; padding-right:30px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">ĐẶT VÉ</h2>
             
             <form id="bookingForm" onsubmit="datVe(event)">
                 <div class="form-group">
-                    <label for="date">Chọn Ngày Xem Phim:</label>
+                    <label>Chọn Ngày Xem Phim:</label>
                     <input type="date" id="date" required onchange="capNhatGioChieu()">
                 </div>
 
@@ -110,7 +151,7 @@
                 </div>
 
                 <label>Chọn Ghế Ngồi:</label>
-                <div class="screen"></div><div class="screen-text">Màn Hình</div>
+                <div class="screen"></div><div class="screen-text">Màn Hình Chính</div>
                 
                 <div class="seat-section">
                     <script>
@@ -123,10 +164,11 @@
                     </script>
                 </div>
                 <div class="total-price" id="totalDisplay">Tổng tiền: 0 đ</div><br>
-                <button type="submit" class="btn-submit-booking">XÁC NHẬN ĐẶT VÉ VÀ KHÓA GHẾ</button>
+                <button type="submit" class="btn-submit-booking">XÁC NHẬN ĐẶT VÉ & KHÓA GHẾ</button>
             </form>
         </div>
     </div>
+</div>
 
 <script>
     const firebaseConfig = { databaseURL: "https://phim-daaa7-default-rtdb.asia-southeast1.firebasedatabase.app/" };
@@ -142,7 +184,7 @@
     database.ref('he_thong_phim').on('value', (snapshot) => {
         const data = snapshot.val();
         const grid = document.getElementById('userMovieGrid');
-        if (!data) { grid.innerHTML = "<p>Rạp đang bảo trì dữ liệu phim.</p>"; return; }
+        if (!data) { grid.innerHTML = "<p style='text-align:center; color:#94a3b8;'>Hệ thống trống.</p>"; return; }
 
         moviesMapData = data;
         let moviesArray = [];
@@ -168,18 +210,17 @@
                     </div>
                     <div class="movie-title">${movie.title}</div>
                     <span class="age-tag ${tagClass}">${movie.age}</span>
-                    <button class="btn-booking" onclick="openBooking('${movie.title.replace(/'/g, "\\'")}', '${movie.id}')">Đặt Vé Ngay</button>
+                    <button class="btn-booking" onclick="openBooking('${movie.title.replace(/'/g, "\\'")}', '${movie.id}')">Đặt Vé</button>
                 </div>
             `;
         });
-        grid.innerHTML = html || "<p>Hôm nay tạm hết lịch phim phù hợp.</p>";
+        grid.innerHTML = html || "<p style='text-align:center; color:#94a3b8;'>Hiện chưa có lịch phim chiếu phù hợp.</p>";
     });
 
     function openDetails(t, img, yt) {
         document.getElementById('lightboxTitle').innerText = t; 
         document.getElementById('lightboxImg').src = img;
         
-        // Xử lý chuẩn hóa mã YouTube ID đề phòng trường hợp nhập nhầm cả link dài
         let videoId = yt.trim();
         if(videoId.includes("v=")) {
             videoId = videoId.split("v=")[1].split("&")[0];
@@ -192,12 +233,10 @@
         document.getElementById('youtubePlayer').src = ""; 
         document.getElementById('btnPlay').style.display = 'inline-flex';
         document.getElementById('lightbox').style.display = 'flex'; 
-        document.body.style.overflow = 'hidden';
     }
     
     function playTrailer() {
         if (!idVideoHienTai) return;
-        // Sử dụng youtube.com/embed/ chuẩn hóa quốc tế kết hợp thuộc tính chống chặn bên thứ ba
         document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${idVideoHienTai}?autoplay=1&rel=0&showinfo=0&origin=${window.location.origin}`;
         document.getElementById('videoWrapper').style.display = 'block'; 
         document.getElementById('btnPlay').style.display = 'none';
@@ -206,13 +245,12 @@
     function closeLightbox() {
         document.getElementById('lightbox').style.display = 'none'; 
         document.getElementById('youtubePlayer').src = "";
-        if(document.getElementById('bookingOverlay').style.display !== 'block') document.body.style.overflow = 'auto';
     }
 
     function openBooking(ten, cleanId) {
         phimHienTai = ten; activeMovieCleanId = cleanId;
         document.getElementById('bookingMovieTitle').innerText = `ĐẶT VÉ: ${ten.toUpperCase()}`;
-        document.getElementById('bookingOverlay').style.display = 'block'; document.body.style.overflow = 'hidden';
+        document.getElementById('bookingOverlay').style.display = 'block';
         capNhatGioChieu();
     }
 
@@ -234,7 +272,7 @@
         });
 
         if (danhSachGioHienThi.length === 0) {
-            timeSlotsArea.innerHTML = "<p style='color:#ff6b6b; font-size:13px; font-weight:600;'>Ngày này rạp chưa xếp lịch hoặc các suất chiếu đã qua giờ!</p>";
+            timeSlotsArea.innerHTML = "<p style='color:#ff6b6b; font-size:13px; font-weight:bold; margin:5px 0;'>Ngày này rạp chưa xếp lịch hoặc đã qua suất chiếu!</p>";
             resetFormGhe(); return;
         }
 
@@ -278,7 +316,7 @@
     }
 
     function resetFormGhe() { document.querySelectorAll('.seat-checkbox').forEach(cb => { cb.disabled = false; cb.checked = false; }); }
-    function closeBooking() { database.ref().off(); document.getElementById('bookingOverlay').style.display = 'none'; document.body.style.overflow = 'auto'; }
+    function closeBooking() { database.ref().off(); document.getElementById('bookingOverlay').style.display = 'none'; }
     function tinhTien() { const sl = document.querySelectorAll('.seat-checkbox:checked:not(:disabled)').length; document.getElementById('totalDisplay').innerText = `Tổng tiền: ${(GIA_VE * sl).toLocaleString('vi-VN')} đ`; }
 
     function datVe(event) {
