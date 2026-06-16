@@ -38,26 +38,9 @@
             text-shadow: 0 4px 12px rgba(228, 63, 90, 0.3);
         }
 
-        .brand-icon {
-            font-size: 26px;
-            color: #e43f5a;
-        }
-
-        h1 {
-            color: #ffffff;
-            text-align: center;
-            margin-top: 5px;
-            margin-bottom: 35px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-size: 18px;
-            opacity: 0.8;
-        }
-
-        h2 {
-            color: #e43f5a;
-            text-align: center;
-        }
+        .brand-icon { font-size: 26px; color: #e43f5a; }
+        h1 { color: #ffffff; text-align: center; margin-top: 5px; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 1.5px; font-size: 18px; opacity: 0.8; }
+        h2 { color: #e43f5a; text-align: center; }
 
         /* --- DANH SÁCH PHIM (POSTER GRID) --- */
         .movie-grid {
@@ -81,355 +64,90 @@
             flex-direction: column;
             justify-content: space-between;
         }
-
-        .movie-card:hover {
-            transform: translateY(-5px);
-        }
+        .movie-card:hover { transform: translateY(-5px); }
 
         .poster-wrapper {
-            width: 100%;
-            height: 270px;
-            overflow: hidden;
-            background-color: #0f172a;
-            cursor: pointer;
+            width: 100%; height: 270px; overflow: hidden; background-color: #0f172a; cursor: pointer;
         }
-
-        .movie-poster {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: opacity 0.3s;
-        }
-
-        .movie-poster:hover {
-            opacity: 0.8;
-        }
+        .movie-poster { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s; }
+        .movie-poster:hover { opacity: 0.8; }
 
         .movie-title {
-            font-size: 15px;
-            font-weight: bold;
-            margin: 12px 8px 5px 8px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.3;
+            font-size: 15px; font-weight: bold; margin: 12px 8px 5px 8px; height: 44px; display: flex; align-items: center; justify-content: center; line-height: 1.3;
         }
 
-        .age-tag {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 12px;
-            align-self: center;
-        }
+        .age-tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-bottom: 12px; align-self: center; }
         .tag-t13 { background-color: #ff9f43; color: #000; }
         .tag-t16 { background-color: #ff6b6b; color: #fff; }
+        .tag-t18 { background-color: #d63031; color: #fff; }
         .tag-k { background-color: #10ac84; color: #fff; }
         .tag-p { background-color: #00cb82; color: #fff; }
 
         .btn-booking {
-            background-color: #e43f5a;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin: 0 auto;
-            width: 80%;
+            background-color: #e43f5a; color: white; border: none; padding: 10px 18px; font-size: 13px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: background 0.2s; margin: 0 auto; width: 80%;
         }
+        .btn-booking:hover { background-color: #b93246; }
 
-        .btn-booking:hover {
-            background-color: #b93246;
-        }
-
-        /* --- CHI TIẾT POPUP LIGHTBOX (ĐÃ SỬA GIAO DIỆN TRÌNH PHÁT VIDEO KHÔNG BỊ PHÓNG QUÁ TO) --- */
+        /* --- POPUP LIGHTBOX XEM TRAILER --- */
         .lightbox {
-            display: none; 
-            position: fixed;
-            z-index: 1000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(10, 10, 26, 0.95);
-            justify-content: center;
-            align-items: center;
-            overflow-y: auto;
-            padding: 20px;
-            box-sizing: border-box;
+            display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(10, 10, 26, 0.95); justify-content: center; align-items: center; overflow-y: auto; padding: 20px; box-sizing: border-box;
         }
-
         .lightbox-content {
-            background-color: #162447;
-            max-width: 500px; /* Giới hạn chiều rộng tối đa của khung popup */
-            width: 100%;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-align: center;
-            position: relative;
-            box-sizing: border-box;
+            background-color: #162447; max-width: 500px; width: 100%; border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; position: relative; box-sizing: border-box;
         }
-
         .btn-close-lightbox {
-            position: absolute;
-            top: -15px;
-            right: -15px;
-            background: #e43f5a;
-            color: white;
-            border: none;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            z-index: 1010;
+            position: absolute; top: -15px; right: -15px; background: #e43f5a; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 1010;
         }
-
-        .lightbox-img {
-            width: 100%;
-            max-height: 260px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
+        .lightbox-img { width: 100%; max-height: 260px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
 
         .btn-play-trailer {
-            background-color: #00b894;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            margin: 10px 0 15px 0;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 10px rgba(0, 184, 148, 0.4);
+            background-color: #00b894; color: white; border: none; padding: 12px 25px; font-size: 15px; font-weight: bold; border-radius: 30px; cursor: pointer; margin: 10px 0 15px 0; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0, 184, 148, 0.4);
         }
 
-        /* KHUNG CHỨA VIDEO: Không bao giờ bị phóng to quá kích thước bình thường */
         .video-wrapper {
-            display: none; 
-            margin-top: 15px;
-            position: relative;
-            padding-bottom: 56.25%; /* Tỷ lệ khung hình 16:9 tiêu chuẩn */
-            height: 0;
-            overflow: hidden;
-            border-radius: 8px;
-            background-color: #000;
-            width: 100%;
-            max-width: 100%;
+            display: none; margin-top: 15px; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background-color: #000; width: 100%;
         }
-
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
         /* --- GIAO DIỆN ĐẶT VÉ PHỦ TOÀN MÀN HÌNH --- */
         .booking-overlay {
-            display: none; 
-            position: fixed;
-            z-index: 1001; 
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #1a1a2e;
-            overflow-y: auto;
-            box-sizing: border-box;
-            padding: 20px;
+            display: none; position: fixed; z-index: 1001; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a1a2e; overflow-y: auto; box-sizing: border-box; padding: 20px;
         }
-
         .booking-container {
-            background-color: #162447;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 100%;
-            margin: 10px auto;
-            position: relative;
+            background-color: #162447; border-radius: 12px; padding: 25px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); max-width: 500px; width: 100%; margin: 10px auto; position: relative;
         }
-
         .btn-close-booking {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #e43f5a;
-            color: white;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; top: 15px; right: 15px; background: #e43f5a; color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #cbd5e1; }
+        input[type="date"] { width: 100%; padding: 12px; border: 1px solid #1f4068; border-radius: 6px; background-color: #1f4068; color: #fff; font-size: 16px; box-sizing: border-box; }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #cbd5e1;
-        }
-
-        input[type="date"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #1f4068;
-            border-radius: 6px;
-            background-color: #1f4068;
-            color: #fff;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-
-        .time-slots-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 5px;
-        }
-
-        .time-slot-radio {
-            display: none; 
-        }
-
+        .time-slots-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
+        .time-slot-radio { display: none; }
         .time-slot-label {
-            display: block;
-            background-color: #ffffff;
-            color: #1a1a2e;
-            padding: 8px 16px;
-            border-radius: 5px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.2s;
-            text-align: center;
-            min-width: 60px;
+            display: block; background-color: #ffffff; color: #1a1a2e; padding: 8px 16px; border-radius: 5px; font-weight: 600; font-size: 14px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; text-align: center; min-width: 60px;
         }
-
-        .time-slot-radio:checked + .time-slot-label {
-            background-color: #e43f5a;
-            color: #ffffff;
-            border-color: #ffffff;
-            box-shadow: 0 0 8px rgba(224, 63, 90, 0.6);
-        }
+        .time-slot-radio:checked + .time-slot-label { background-color: #e43f5a; color: #ffffff; border-color: #ffffff; box-shadow: 0 0 8px rgba(224, 63, 90, 0.6); }
 
         /* Sơ đồ 20 ghế */
-        .screen {
-            background-color: #e2e8f0;
-            height: 6px;
-            border-radius: 4px;
-            margin: 15px 0 25px 0;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
-        }
+        .screen { background-color: #e2e8f0; height: 6px; border-radius: 4px; margin: 15px 0 25px 0; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2); }
+        .screen-text { text-align: center; font-size: 11px; color: #94a3b8; margin-top: -20px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
 
-        .screen-text {
-            text-align: center;
-            font-size: 11px;
-            color: #94a3b8;
-            margin-top: -20px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .seat-section {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin-bottom: 25px;
-        }
-
-        .seat-checkbox {
-            display: none;
-        }
-
+        .seat-section { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 25px; }
+        .seat-checkbox { display: none; }
         .seat-label {
-            display: inline-block;
-            width: 100%;
-            height: 38px;
-            line-height: 38px;
-            background-color: #4b5563;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            text-align: center;
-            transition: background-color 0.2s;
-            user-select: none;
-            font-size: 13px;
+            display: inline-block; width: 100%; height: 38px; line-height: 38px; background-color: #4b5563; border-radius: 6px; cursor: pointer; font-weight: bold; text-align: center; transition: background-color 0.2s; user-select: none; font-size: 13px;
         }
+        .seat-checkbox:checked + .seat-label { background-color: #e43f5a; color: #fff; }
 
-        .seat-checkbox:checked + .seat-label {
-            background-color: #e43f5a;
-            color: #fff;
-        }
+        .seat-checkbox:disabled + .seat-label { background-color: #bdc3c7 !important; color: #7f8c8d !important; cursor: not-allowed !important; position: relative; }
+        .seat-checkbox:disabled + .seat-label::after { content: "✕"; color: #e43f5a; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 16px; }
 
-        /* Ghế đã đặt khóa đỏ chéo */
-        .seat-checkbox:disabled + .seat-label {
-            background-color: #bdc3c7 !important;
-            color: #7f8c8d !important;
-            cursor: not-allowed !important;
-            position: relative;
-        }
-        .seat-checkbox:disabled + .seat-label::after {
-            content: "✕";
-            color: #e43f5a;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 16px;
-        }
-
-        .btn-submit-booking {
-            width: 100%;
-            background-color: #e43f5a;
-            color: white;
-            border: none;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .btn-submit-booking:hover {
-            background-color: #b93246;
-        }
-
-        .total-price {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #10b981;
-        }
+        .btn-submit-booking { width: 100%; background-color: #e43f5a; color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .btn-submit-booking:hover { background-color: #b93246; }
+        .total-price { margin-top: 15px; text-align: center; font-size: 18px; font-weight: bold; color: #10b981; }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -443,52 +161,7 @@
     </div>
     <h1>Lịch Chiếu Phim Hệ Thống</h1>
 
-    <div class="movie-grid">
-        <div class="movie-card">
-            <div class="poster-wrapper" onclick="openDetails('Tên cậu là gì', 'https://i.postimg.cc/NjQ4XbdS/IMG-5274.jpg', '_mifHzxFNQ4')">
-                <img src="https://i.postimg.cc/NjQ4XbdS/IMG-5274.jpg" alt="Tên cậu là gì" class="movie-poster">
-            </div>
-            <div class="movie-title">Tên cậu là gì</div>
-            <span class="age-tag tag-t13">T13</span>
-            <button class="btn-booking" onclick="openBooking('Tên cậu là gì')">Đặt Vé Ngay</button>
-        </div>
-
-        <div class="movie-card">
-            <div class="poster-wrapper" onclick="openDetails('Ốc mượn hồn', 'https://i.postimg.cc/Lscgt8Hb/IMG-5275.jpg', 'lsRijdOlvCk')">
-                <img src="https://i.postimg.cc/Lscgt8Hb/IMG-5275.jpg" alt="Ốc mượn hồn" class="movie-poster">
-            </div>
-            <div class="movie-title">Ốc mượn hồn</div>
-            <span class="age-tag tag-t16">T16</span>
-            <button class="btn-booking" onclick="openBooking('Ốc mượn hồn')">Đặt Vé Ngay</button>
-        </div>
-
-        <div class="movie-card">
-            <div class="poster-wrapper" onclick="openDetails('Tạm biệt gohan', 'https://i.postimg.cc/j5YCW3Xz/IMG-5276.jpg', 'PaGtIdi8ONk')">
-                <img src="https://i.postimg.cc/j5YCW3Xz/IMG-5276.jpg" alt="Tạm biệt gohan" class="movie-poster">
-            </div>
-            <div class="movie-title">Tạm biệt gohan</div>
-            <span class="age-tag tag-k">Phim K</span>
-            <button class="btn-booking" onclick="openBooking('Tạm biệt gohan')">Đặt Vé Ngay</button>
-        </div>
-
-        <div class="movie-card">
-            <div class="poster-wrapper" onclick="openDetails('Doraemon: Nobita và lâu đài dưới đáy biển', 'https://i.postimg.cc/PrVPmnn0/IMG-5285.jpg', 'u3JgYkmuK78')">
-                <img src="https://i.postimg.cc/PrVPmnn0/IMG-5285.jpg" alt="Doraemon" class="movie-poster">
-            </div>
-            <div class="movie-title">Doraemon: Nobita và lâu đài dưới đáy biển</div>
-            <span class="age-tag tag-p">Phim P</span>
-            <button class="btn-booking" onclick="openBooking('Doraemon: Nobita và lâu đài dưới đáy biển')">Đặt Vé Ngay</button>
-        </div>
-
-        <div class="movie-card">
-            <div class="poster-wrapper" onclick="openDetails('Shin - Cậu Bé Bút Chì: Vương Quốc Nguệch Ngoạc', 'https://i.postimg.cc/5yRbF1FW/IMG-5286.jpg', '7x-BnFmjWFg')">
-                <img src="https://i.postimg.cc/5yRbF1FW/IMG-5286.jpg" alt="Shin" class="movie-poster">
-            </div>
-            <div class="movie-title">Shin - Cậu Bé Bút Chì: Vương Quốc Nguệch Ngoạc</div>
-            <span class="age-tag tag-p">Phim P</span>
-            <button class="btn-booking" onclick="openBooking('Shin - Cậu Bé Bút Chì: Vương Quốc Nguệch Ngoạc')">Đặt Vé Ngay</button>
-        </div>
-    </div>
+    <div class="movie-grid" id="userMovieGrid">Đang cập nhật danh sách phim mới...</div>
 
     <div id="lightbox" class="lightbox">
         <div class="lightbox-content">
@@ -498,7 +171,6 @@
             <div>
                 <button class="btn-play-trailer" id="btnPlay" onclick="playTrailer()">▶ Xem Trailer Trực Tiếp</button>
             </div>
-            
             <div class="video-wrapper" id="videoWrapper">
                 <iframe id="youtubePlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
@@ -526,29 +198,14 @@
                 <div class="screen-text">Màn Hình</div>
                 
                 <div class="seat-section">
-                    <div><input type="checkbox" id="A1" class="seat-checkbox" value="A1" onchange="tinhTien()"><label for="A1" class="seat-label">A1</label></div>
-                    <div><input type="checkbox" id="A2" class="seat-checkbox" value="A2" onchange="tinhTien()"><label for="A2" class="seat-label">A2</label></div>
-                    <div><input type="checkbox" id="A3" class="seat-checkbox" value="A3" onchange="tinhTien()"><label for="A3" class="seat-label">A3</label></div>
-                    <div><input type="checkbox" id="A4" class="seat-checkbox" value="A4" onchange="tinhTien()"><label for="A4" class="seat-label">A4</label></div>
-                    <div><input type="checkbox" id="A5" class="seat-checkbox" value="A5" onchange="tinhTien()"><label for="A5" class="seat-label">A5</label></div>
-                    
-                    <div><input type="checkbox" id="B1" class="seat-checkbox" value="B1" onchange="tinhTien()"><label for="B1" class="seat-label">B1</label></div>
-                    <div><input type="checkbox" id="B2" class="seat-checkbox" value="B2" onchange="tinhTien()"><label for="B2" class="seat-label">B2</label></div>
-                    <div><input type="checkbox" id="B3" class="seat-checkbox" value="B3" onchange="tinhTien()"><label for="B3" class="seat-label">B3</label></div>
-                    <div><input type="checkbox" id="B4" class="seat-checkbox" value="B4" onchange="tinhTien()"><label for="B4" class="seat-label">B4</label></div>
-                    <div><input type="checkbox" id="B5" class="seat-checkbox" value="B5" onchange="tinhTien()"><label for="B5" class="seat-label">B5</label></div>
-                    
-                    <div><input type="checkbox" id="C1" class="seat-checkbox" value="C1" onchange="tinhTien()"><label for="C1" class="seat-label">C1</label></div>
-                    <div><input type="checkbox" id="C2" class="seat-checkbox" value="C2" onchange="tinhTien()"><label for="C2" class="seat-label">C2</label></div>
-                    <div><input type="checkbox" id="C3" class="seat-checkbox" value="C3" onchange="tinhTien()"><label for="C3" class="seat-label">C3</label></div>
-                    <div><input type="checkbox" id="C4" class="seat-checkbox" value="C4" onchange="tinhTien()"><label for="C4" class="seat-label">C4</label></div>
-                    <div><input type="checkbox" id="C5" class="seat-checkbox" value="C5" onchange="tinhTien()"><label for="C5" class="seat-label">C5</label></div>
-
-                    <div><input type="checkbox" id="D1" class="seat-checkbox" value="D1" onchange="tinhTien()"><label for="D1" class="seat-label">D1</label></div>
-                    <div><input type="checkbox" id="D2" class="seat-checkbox" value="D2" onchange="tinhTien()"><label for="D2" class="seat-label">D2</label></div>
-                    <div><input type="checkbox" id="D3" class="seat-checkbox" value="D3" onchange="tinhTien()"><label for="D3" class="seat-label">D3</label></div>
-                    <div><input type="checkbox" id="D4" class="seat-checkbox" value="D4" onchange="tinhTien()"><label for="D4" class="seat-label">D4</label></div>
-                    <div><input type="checkbox" id="D5" class="seat-checkbox" value="D5" onchange="tinhTien()"><label for="D5" class="seat-label">D5</label></div>
+                    <script>
+                        let lines = ['A', 'B', 'C', 'D'];
+                        lines.forEach(l => {
+                            for(let i=1; i<=5; i++){
+                                document.write(`<div><input type="checkbox" id="${l}${i}" class="seat-checkbox" value="${l}${i}" onchange="tinhTien()"><label for="${l}${i}" class="seat-label">${l}${i}</label></div>`);
+                            }
+                        });
+                    </script>
                 </div>
 
                 <div class="total-price" id="totalDisplay">Tổng tiền: 0 đ</div>
@@ -559,7 +216,6 @@
     </div>
 
 <script>
-    // Kết nối Database Realtime Firebase của bạn
     const firebaseConfig = {
         databaseURL: "https://phim-daaa7-default-rtdb.asia-southeast1.firebasedatabase.app/"
     };
@@ -569,71 +225,118 @@
     const GIA_VE = 55000; 
     let phimHienTai = "";
     let idVideoHienTai = ""; 
+    let moviesMapData = {}; // Lưu trữ object phim phục vụ tìm kiếm giờ
 
     document.getElementById('date').valueAsDate = new Date();
 
-    /* --- LIGHTBOX & TRÌNH PHÁT VIDEO NỘI BỘ TRÊN WEB --- */
+    // Tải danh sách phim từ Firebase cấp phát cho người dùng
+    database.ref('he_thong_phim').on('value', (snapshot) => {
+        const data = snapshot.val();
+        const grid = document.getElementById('userMovieGrid');
+        if (!data) {
+            grid.innerHTML = "<p style='text-align:center;'>Hiện tại rạp đang bảo trì lịch chiếu.</p>";
+            return;
+        }
+
+        moviesMapData = data;
+        let moviesArray = [];
+        const homNayStr = new Date().toISOString().split('T')[0];
+
+        Object.keys(data).forEach(id => {
+            // Chỉ hiển thị phim nếu ngày kết thúc chiếu lớn hơn hoặc bằng ngày hôm nay
+            if (data[id].endDate >= homNayStr) {
+                moviesArray.push({ id: id, ...data[id] });
+            }
+        });
+
+        // Sắp xếp phim theo cài đặt "stt" từ trang admin
+        moviesArray.sort((a, b) => (a.stt || 0) - (b.stt || 0));
+
+        if(moviesArray.length === 0) {
+            grid.innerHTML = "<p style='text-align:center;'>Hôm nay rạp chưa có phim mới hợp lệ.</p>";
+            return;
+        }
+
+        let html = "";
+        moviesArray.forEach(movie => {
+            // Định màu cho nhãn giới hạn độ tuổi
+            let tagClass = "tag-p";
+            if(movie.age === "T13") tagClass = "tag-t13";
+            if(movie.age === "T16") tagClass = "tag-t16";
+            if(movie.age === "T18") tagClass = "tag-t18";
+            if(movie.age === "Phim K") tagClass = "tag-k";
+
+            html += `
+                <div class="movie-card">
+                    <div class="poster-wrapper" onclick="openDetails('${movie.title.replace(/'/g, "\\'")}', '${movie.poster}', '${movie.trailer}')">
+                        <img src="${movie.poster}" alt="Poster" class="movie-poster">
+                    </div>
+                    <div class="movie-title">${movie.title}</div>
+                    <span class="age-tag ${tagClass}">${movie.age}</span>
+                    <button class="btn-booking" onclick="openBooking('${movie.title.replace(/'/g, "\\'")}', '${movie.id}')">Đặt Vé Ngay</button>
+                </div>
+            `;
+        });
+        grid.innerHTML = html;
+    });
+
     function openDetails(tenPhim, imgUrl, youtubeId) {
         document.getElementById('lightboxTitle').innerText = tenPhim;
         document.getElementById('lightboxImg').src = imgUrl;
         idVideoHienTai = youtubeId;
-        
-        // Ẩn khung video cũ và reset link player tránh tự chạy ngầm
         document.getElementById('videoWrapper').style.display = 'none';
         document.getElementById('youtubePlayer').src = "";
         document.getElementById('btnPlay').style.display = 'inline-flex';
-        
         document.getElementById('lightbox').style.display = 'flex';
         document.body.style.overflow = 'hidden'; 
     }
 
     function playTrailer() {
         if (!idVideoHienTai) return;
-        // Sử dụng youtube-nocookie.com để lách qua các chính sách bảo mật chặn cookie của trình duyệt nhúng
         document.getElementById('youtubePlayer').src = `https://www.youtube-nocookie.com/embed/${idVideoHienTai}?autoplay=1&rel=0&modestbranding=1`;
         document.getElementById('videoWrapper').style.display = 'block';
-        document.getElementById('btnPlay').style.display = 'none'; // Ẩn nút phát sau khi mở video
+        document.getElementById('btnPlay').style.display = 'none';
     }
 
     function closeLightbox() {
         document.getElementById('lightbox').style.display = 'none';
-        document.getElementById('youtubePlayer').src = ""; // Dừng hẳn video khi bấm thoát ra ngoài
+        document.getElementById('youtubePlayer').src = "";
         if(document.getElementById('bookingOverlay').style.display !== 'block') {
             document.body.style.overflow = 'auto';
         }
     }
 
-    /* --- TỰ ĐỘNG ẨN KHUNG GIỜ CHIẾU ĐÃ QUA GIỜ THỜI GIAN THỰC --- */
+    let activeMovieCleanId = "";
+    function openBooking(tenPhim, cleanId) {
+        phimHienTai = tenPhim;
+        activeMovieCleanId = cleanId;
+        document.getElementById('bookingMovieTitle').innerText = `ĐẶT VÉ: ${tenPhim.toUpperCase()}`;
+        document.getElementById('bookingOverlay').style.display = 'block';
+        document.body.style.overflow = 'hidden'; 
+        capNhatGioChieu();
+    }
+
     function capNhatGioChieu() {
         const dateInput = document.getElementById('date').value;
         const timeSlotsArea = document.getElementById('timeSlotsArea');
-        if (!dateInput) return;
+        if (!dateInput || !activeMovieCleanId || !moviesMapData[activeMovieCleanId]) return;
+
+        const movie = moviesMapData[activeMovieCleanId];
+        const danhSachGioGoc = movie.slots ? Object.keys(movie.slots) : [];
 
         const dateObj = new Date(dateInput);
-        const dayParsed = dateObj.getDate();
-        
         const hienTai = new Date();
         const laNgayHomNay = (dateObj.toDateString() === hienTai.toDateString());
         
-        let danhSachGioGoc = [];
-        if (dayParsed % 2 === 0) {
-            danhSachGioGoc = ["10:00", "12:10", "14:00", "18:10", "20:20", "22:30"];
-        } else {
-            danhSachGioGoc = ["09:15", "11:30", "13:45", "16:00", "19:30", "21:45"];
-        }
-
+        // Lọc giờ phim theo thời gian thực tế
         let danhSachGioHienThi = danhSachGioGoc.filter(gio => {
             if (!laNgayHomNay) return true; 
-            
             const [gioXem, phutXem] = gio.split(":").map(Number);
-            const gioHienTai = hienTai.getHours();
-            const phutHienTai = hienTai.getMinutes();
-            
-            return (gioXem * 60 + phutXem) > (gioHienTai * 60 + phutHienTai);
+            return (gioXem * 60 + phutXem) > (hienTai.getHours() * 60 + hienTai.getMinutes());
         });
 
         if (danhSachGioHienThi.length === 0) {
-            timeSlotsArea.innerHTML = "<p style='color:#ff6b6b; font-size:14px; font-weight:600;'>Hôm nay đã hết suất chiếu!</p>";
+            timeSlotsArea.innerHTML = "<p style='color:#ff6b6b; font-size:13px; font-weight:600;'>Suất chiếu ngày này đã hết hoặc chưa có!</p>";
             resetFormGhe();
             return;
         }
@@ -649,16 +352,13 @@
             `;
         });
         timeSlotsArea.innerHTML = htmlSlots;
-        
         taiTrangThaiGheRealtime();
     }
 
-    /* --- ĐỌC TRẠNG THÁI GHẾ REALTIME TỪ FIREBASE --- */
     function taiTrangThaiGheRealtime() {
         resetFormGhe();
         const ngay = document.getElementById('date').value;
         const slotSelected = document.querySelector('input[name="timeSlot"]:checked');
-        
         if (!ngay || !slotSelected || !phimHienTai) return;
         
         const gio = slotSelected.value;
@@ -672,10 +372,7 @@
                 Object.keys(data).forEach(idGhe => {
                     if (data[idGhe] === true) {
                         const checkboxGhe = document.getElementById(idGhe);
-                        if (checkboxGhe) {
-                            checkboxGhe.disabled = true;
-                            checkboxGhe.checked = false;
-                        }
+                        if (checkboxGhe) { checkboxGhe.disabled = true; checkboxGhe.checked = false; }
                     }
                 });
             }
@@ -684,21 +381,7 @@
     }
 
     function resetFormGhe() {
-        const checkboxes = document.querySelectorAll('.seat-checkbox');
-        checkboxes.forEach(cb => {
-            cb.disabled = false;
-            cb.checked = false;
-        });
-    }
-
-    /* --- GIAO DIỆN ĐẶT VÉ --- */
-    function openBooking(tenPhim) {
-        phimHienTai = tenPhim;
-        document.getElementById('bookingMovieTitle').innerText = `ĐẶT VÉ: ${tenPhim.toUpperCase()}`;
-        document.getElementById('bookingOverlay').style.display = 'block';
-        document.body.style.overflow = 'hidden'; 
-        
-        capNhatGioChieu();
+        document.querySelectorAll('.seat-checkbox').forEach(cb => { cb.disabled = false; cb.checked = false; });
     }
 
     function closeBooking() {
@@ -708,44 +391,35 @@
     }
 
     function tinhTien() {
-        const gheDaChon = document.querySelectorAll('.seat-checkbox:checked:not(:disabled)');
-        const soLuongGhe = gheDaChon.length;
-        const tongTien = GIA_VE * soLuongGhe;
-        document.getElementById('totalDisplay').innerText = `Tổng tiền: ${tongTien.toLocaleString('vi-VN')} đ`;
+        const soLuongGhe = document.querySelectorAll('.seat-checkbox:checked:not(:disabled)').length;
+        document.getElementById('totalDisplay').innerText = `Tổng tiền: ${(GIA_VE * soLuongGhe).toLocaleString('vi-VN')} đ`;
     }
 
-    /* --- GHI DỮ LIỆU ĐẶT GHẾ LÊN FIREBASE --- */
     function datVe(event) {
         event.preventDefault();
         const ngay = document.getElementById('date').value;
         const slotSelected = document.querySelector('input[name="timeSlot"]:checked');
         const gio = slotSelected ? slotSelected.value : "";
-        
         const gheDaChon = document.querySelectorAll('.seat-checkbox:checked:not(:disabled)');
         let danhSachGhe = [];
         gheDaChon.forEach(ghe => danhSachGhe.push(ghe.value));
 
         if (!gio) { alert('Vui lòng chọn suất chiếu!'); return; }
-        if (danhSachGhe.length === 0) { alert('Vui lòng chọn ít nhất một vị trí ghế!'); return; }
+        if (danhSachGhe.length === 0) { alert('Vui lòng chọn ghế!'); return; }
 
         const pathPhim = btoa(unescape(encodeURIComponent(phimHienTai))).replace(/=/g, "");
         const duongDanData = `dat_ve/${pathPhim}/${ngay}/${gio.replace(':', '_')}`;
         
         let updateData = {};
-        danhSachGhe.forEach(idGhe => {
-            updateData[idGhe] = true;
-        });
+        danhSachGhe.forEach(idGhe => { updateData[idGhe] = true; });
 
         database.ref(duongDanData).update(updateData, (error) => {
-            if (error) {
-                alert('Có lỗi dữ liệu xảy ra!');
-            } else {
-                alert(`🎉 ĐẶT VÉ ĐỒNG BỘ THÀNH CÔNG!\n\n🎬 Phim: ${phimHienTai}\n📅 Ngày: ${ngay}\n⏰ Suất chiếu: ${gio}\n💺 Số ghế đã khóa: ${danhSachGhe.join(', ')}\n💰 ${document.getElementById('totalDisplay').innerText}`);
+            if (!error) {
+                alert(`🎉 ĐẶT VÉ THÀNH CÔNG!\n\n🎬 Phim: ${phimHienTai}\n📅 Ngày: ${ngay}\n⏰ Suất: ${gio}\n💺 Ghế: ${danhSachGhe.join(', ')}`);
                 closeBooking();
             }
         });
     }
 </script>
-
 </body>
 </html>
