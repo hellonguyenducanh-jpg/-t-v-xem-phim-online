@@ -37,9 +37,11 @@
         /* Lightbox Trailer */
         .lightbox { display: none; position: fixed; z-index: 1000; top:0; left:0; width:100%; height:100%; background-color: rgba(10, 10, 26, 0.95); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .lightbox-content { background-color: #162447; max-width: 500px; width: 100%; border-radius: 12px; padding: 20px; text-align: center; position: relative; box-sizing: border-box; }
-        .btn-close-lightbox { position: absolute; top: -15px; right: -15px; background: #e43f5a; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .btn-close-lightbox { position: absolute; top: -15px; right: -15px; background: #e43f5a; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer; z-index: 1010; }
         .lightbox-img { width: 100%; max-height: 260px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
         .btn-play-trailer { background-color: #00b894; color: white; border: none; padding: 12px 25px; font-size: 15px; font-weight: bold; border-radius: 30px; cursor: pointer; margin: 10px 0 15px 0; display: inline-flex; align-items: center; gap: 8px; }
+        
+        /* Khung chứa video tối ưu tỷ lệ 16:9 chống lỗi */
         .video-wrapper { display: none; margin-top: 15px; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background-color: #000; width: 100%; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
@@ -85,7 +87,9 @@
             <h2 id="lightboxTitle" style="margin-top:0; font-size: 18px;">Tên Phim</h2>
             <img id="lightboxImg" class="lightbox-img" src="" alt="Poster">
             <div><button class="btn-play-trailer" id="btnPlay" onclick="playTrailer()">▶ Xem Trailer Trực Tiếp</button></div>
-            <div class="video-wrapper" id="videoWrapper"><iframe id="youtubePlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+            <div class="video-wrapper" id="videoWrapper">
+                <iframe id="youtubePlayer" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
 
@@ -101,7 +105,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Suất Chiếu (Lịch thay đổi linh hoạt theo từng ngày):</label>
+                    <label>Suất Chiếu:</label>
                     <div class="time-slots-container" id="timeSlotsArea"></div>
                 </div>
 
@@ -172,18 +176,36 @@
     });
 
     function openDetails(t, img, yt) {
-        document.getElementById('lightboxTitle').innerText = t; document.getElementById('lightboxImg').src = img;
-        idVideoHienTai = yt; document.getElementById('videoWrapper').style.display = 'none';
-        document.getElementById('youtubePlayer').src = ""; document.getElementById('btnPlay').style.display = 'inline-flex';
-        document.getElementById('lightbox').style.display = 'flex'; document.body.style.overflow = 'hidden';
+        document.getElementById('lightboxTitle').innerText = t; 
+        document.getElementById('lightboxImg').src = img;
+        
+        // Xử lý chuẩn hóa mã YouTube ID đề phòng trường hợp nhập nhầm cả link dài
+        let videoId = yt.trim();
+        if(videoId.includes("v=")) {
+            videoId = videoId.split("v=")[1].split("&")[0];
+        } else if(videoId.includes("youtu.be/")) {
+            videoId = videoId.split("youtu.be/")[1].split("?")[0];
+        }
+        idVideoHienTai = videoId; 
+
+        document.getElementById('videoWrapper').style.display = 'none';
+        document.getElementById('youtubePlayer').src = ""; 
+        document.getElementById('btnPlay').style.display = 'inline-flex';
+        document.getElementById('lightbox').style.display = 'flex'; 
+        document.body.style.overflow = 'hidden';
     }
+    
     function playTrailer() {
         if (!idVideoHienTai) return;
-        document.getElementById('youtubePlayer').src = `https://www.youtube-nocookie.com/embed/${idVideoHienTai}?autoplay=1&rel=0&modestbranding=1`;
-        document.getElementById('videoWrapper').style.display = 'block'; document.getElementById('btnPlay').style.display = 'none';
+        // Sử dụng youtube.com/embed/ chuẩn hóa quốc tế kết hợp thuộc tính chống chặn bên thứ ba
+        document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${idVideoHienTai}?autoplay=1&rel=0&showinfo=0&origin=${window.location.origin}`;
+        document.getElementById('videoWrapper').style.display = 'block'; 
+        document.getElementById('btnPlay').style.display = 'none';
     }
+    
     function closeLightbox() {
-        document.getElementById('lightbox').style.display = 'none'; document.getElementById('youtubePlayer').src = "";
+        document.getElementById('lightbox').style.display = 'none'; 
+        document.getElementById('youtubePlayer').src = "";
         if(document.getElementById('bookingOverlay').style.display !== 'block') document.body.style.overflow = 'auto';
     }
 
@@ -194,20 +216,17 @@
         capNhatGioChieu();
     }
 
-    // ĐỒNG BỘ GIỜ CHÍNH XÁC THEO NGÀY USER ĐANG CHỌN
     function capNhatGioChieu() {
         const dateInput = document.getElementById('date').value;
         const timeSlotsArea = document.getElementById('timeSlotsArea');
         if (!dateInput || !activeMovieCleanId || !moviesMapData[activeMovieCleanId]) return;
 
         const movie = moviesMapData[activeMovieCleanId];
-        // Đọc dữ liệu lịch chiếu của riêng ngày này: movie.lich_chieu[dateInput]
         const danhSachGioGoc = (movie.lich_chieu && movie.lich_chieu[dateInput]) ? Object.keys(movie.lich_chieu[dateInput]) : [];
 
         const hienTai = new Date();
         const laNgayHomNay = (new Date(dateInput).toDateString() === hienTai.toDateString());
         
-        // Lọc bỏ các giờ đã trôi qua nếu khách hàng chọn ngày hôm nay
         let danhSachGioHienThi = danhSachGioGoc.sort().filter(gio => {
             if (!laNgayHomNay) return true;
             const [gioXem, phutXem] = gio.split(":").map(Number);
